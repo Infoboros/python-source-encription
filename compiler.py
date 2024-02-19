@@ -15,11 +15,13 @@ class Compiler:
     def __init__(self,
                  dist_path: str,
                  encryptor: Encryptor,
-                 main_file: str
+                 not_encrypted_files: [str],
+                 injection_file: str
                  ):
         self.dist_path = dist_path
         self.encryptor = encryptor
-        self.main_file = main_file
+        self.not_encrypted_files = not_encrypted_files
+        self.injection_file = injection_file
 
     def transfer_src_to_dist(self, src_path: str):
         shutil.rmtree(self.dist_path)
@@ -30,7 +32,7 @@ class Compiler:
             [
                 os.path.join(address, name)
                 for name in files
-                if name != self.main_file
+                if name not in self.not_encrypted_files
             ]
             for address, _, files in os.walk(self.dist_path)
         ])
@@ -42,10 +44,10 @@ class Compiler:
             shutil.copy(staff_file, self.dist_path)
 
     def inject_staff_import(self):
-        main_file_path = os.path.join(self.dist_path, self.main_file)
-        with open(main_file_path, 'r') as fp:
+        injection_file_path = os.path.join(self.dist_path, self.injection_file)
+        with open(injection_file_path, 'r') as fp:
             data = fp.read()
-        with open(main_file_path, 'w') as fp:
+        with open(injection_file_path, 'w') as fp:
             fp.write('import sys\n')
             fp.write('from importer import Importer\n')
             fp.write('sys.meta_path.append(Importer(__file__))\n')

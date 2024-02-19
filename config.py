@@ -8,7 +8,8 @@ SRC_PATH = os.path.join(BASE_PATH, 'src')
 DIST_DIR = 'dist'
 DIST_PATH = os.path.join(BASE_PATH, 'dist')
 
-MAIN_FILE = 'main.py'
+NOT_ENCRYPTED_FILES = ['main.py']
+INJECTION_FILE = 'main.py'
 
 ENCRYPTED_FILES_EXT = 'enc'
 
